@@ -30,6 +30,10 @@ paths:
             description: Bad request
             schema:
               $ref: '#/definitions/Error'
+          '403':
+            description: Access denied
+            schema:
+              $ref: '#/definitions/Error'
           '404':
             description: Missing resource
             schema:
@@ -39,7 +43,44 @@ paths:
             schema:
               $ref: '#/definitions/Error'
   '/{iban}/transactions/{transactionId}':
-            put:
+      get:
+        summary: Get a single transaction
+        description: Get a single transaction by transactionId under a specified Account
+        tags:
+          - transactions
+        parameters:
+          - name: iban
+            in: path
+            required: true
+            type: string
+            format: string
+          - name: transactionId
+            in: path
+            required: true
+            type: string
+            format: string
+        responses:
+          '200':
+            description: This returns a single transaction
+            schema:
+              $ref: '#/definitions/Transaction'
+          '400':
+            description: Bad request
+            schema:
+              $ref: '#/definitions/Error'
+          '403':
+            description: Access denied
+            schema:
+              $ref: '#/definitions/Error'
+          '404':
+            description: Missing resource
+            schema:
+              $ref: '#/definitions/Error'
+          '500':
+            description: Internal server error
+            schema:
+              $ref: '#/definitions/Error'
+      put:
               summary: Creates a new transaction
               description: Creates a new incoming/outgoing transaction
               consumes:
@@ -64,11 +105,15 @@ paths:
                     $ref: '#/definitions/Transaction'
               responses:
                 '200':
-                  description: This creates or updates a Control Word object
+                  description: This creates a new transaction
                   schema:
                     $ref: '#/definitions/Transaction'
                 '400':
                   description: Bad request
+                  schema:
+                    $ref: '#/definitions/Error'
+                '403':
+                  description: Access denied
                   schema:
                     $ref: '#/definitions/Error'
                 '404':
