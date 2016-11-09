@@ -1,0 +1,108 @@
+swagger: '2.0'
+info:
+  title: Payment Transaction API
+  description: Payment Transaction API details
+  version: 1.0.0
+schemes:
+  - http
+basePath: /bankofireland/v1
+produces:
+  - application/json
+paths:
+  '/{iban}/transactions':
+      get:
+        summary: List all transactions
+        description: This will list all transactions that belong to the specified Account
+        tags:
+          - transactions
+        parameters:
+          - name: iban
+            in: path
+            required: true
+            type: string
+            format: string
+        responses:
+          '200':
+            description: This returns an array of transactions
+            schema:
+              $ref: '#/definitions/Transactions'
+          '400':
+            description: Bad request
+            schema:
+              $ref: '#/definitions/Error'
+          '404':
+            description: Missing resource
+            schema:
+              $ref: '#/definitions/Error'
+          '500':
+            description: Internal server error
+            schema:
+              $ref: '#/definitions/Error'
+  '/{iban}/transactions/{transactionId}':
+            put:
+              summary: Creates a new transaction
+              description: Creates a new incoming/outgoing transaction
+              consumes:
+                - application/json
+              tags:
+                - transactions
+              parameters:
+                - name: iban
+                  in: path
+                  required: true
+                  type: string
+                  format: string
+                - name: transactionId
+                  in: path
+                  required: true
+                  type: string
+                  format: string
+                - name: body
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Transaction'
+              responses:
+                '200':
+                  description: This creates or updates a Control Word object
+                  schema:
+                    $ref: '#/definitions/Transaction'
+                '400':
+                  description: Bad request
+                  schema:
+                    $ref: '#/definitions/Error'
+                '404':
+                  description: Missing resource
+                  schema:
+                    $ref: '#/definitions/Error'
+                '500':
+                  description: Internal server error
+                  schema:
+                    $ref: '#/definitions/Error'
+definitions:
+  Error:
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  Transaction:
+    properties:
+      transactionId:
+        type: string
+      date:
+        type: string
+        format: date-time
+      amount:
+        type: integer
+        format: int32
+  Transactions:
+    properties:
+      total:
+        type: integer
+        format: int32
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Transaction'
